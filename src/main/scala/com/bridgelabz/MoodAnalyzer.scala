@@ -7,23 +7,21 @@ package com.bridgelabz
  * package - com.bridgelabz
  * title - Mood analyzer class to check mood
  */
-class MoodAnalyzer (message: String) {
-  object MoodAnalyzer {
-    // method which checks message and prints "Happy" or "Sad"
-    def analyzeMood(): String = {
-      try {
-        if (message == null) {
-          return "HAPPY"
-        }
-        if (message.contains("SAD"))
-          "SAD"
-        else
-          "HAPPY"
+class MoodAnalyzerException(exceptionMsg:TypeException.Value ) extends Exception(exceptionMsg.toString){}
+class MoodAnalyzer(var message: String) {
+  def analyzeMood(): String = {
+    try {
+      if (message.length==0){
+        throw new MoodAnalyzerException(TypeException.EmptyType)
       }
-      catch {
-        case nullPointerException: NullPointerException =>
-          throw nullPointerException
-      }
+      if (message.contains("Sad"))
+        "SAD"
+      else
+        "HAPPY"
+    }
+    catch {
+      case nullPointerException: NullPointerException=>
+        throw new MoodAnalyzerException(TypeException.NullType)
     }
   }
 }
