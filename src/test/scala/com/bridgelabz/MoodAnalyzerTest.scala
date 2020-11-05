@@ -24,4 +24,8 @@ class MoodAnalyzerTest extends FunSuite {
     val moodAnalyzer = new MoodAnalyzer("I am in Any Mood")
     assert(moodAnalyzer.MoodAnalyzer.analyzeMood() == "HAPPY")
   }
+  test("givenNullMessageShouldReturnHappy") {
+    val moodAnalyzer = new MoodAnalyzer(null)
+    assert(moodAnalyzer.MoodAnalyzer.analyzeMood() === "HAPPY")
+  }
 }
