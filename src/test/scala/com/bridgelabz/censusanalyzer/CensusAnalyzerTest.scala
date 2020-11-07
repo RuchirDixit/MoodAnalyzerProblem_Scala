@@ -10,38 +10,78 @@ class CensusAnalyzerTest extends FunSuite {
   val WrongCSVFileTypePath = "C:\\Users\\Admin\\IdeaProjects\\HelloScala\\src\\resources\\IndiaStateCensusData.pdf"
   val InvalidDelimiterFilePath = "C:\\Users\\Admin\\IdeaProjects\\HelloScala\\src\\resources\\IndiaStateCensusDataDelimiter.csv"
   val InvalidHeaderFilePath = "C:\\Users\\Admin\\IdeaProjects\\HelloScala\\src\\resources\\IndiaStateCensusDataInvalidField.csv"
+
+  val IndiaStateCodeCSVFilePath = "C:\\Users\\Admin\\IdeaProjects\\HelloScala\\src\\resources\\IndiaStateCode.csv"
+  val WrongCSVFilePathStateCode = "C:\\Users\\IdeaProjects\\HelloScala\\src\\resources\\IndiaStateCode.csv"
+  val WrongStateCSVFileType = "C:\\Users\\Admin\\IdeaProjects\\HelloScala\\src\\resources\\IndiaStateCode.pdf"
+  val InvalidStateDelimiter = "C:\\Users\\Admin\\IdeaProjects\\HelloScala\\src\\resources\\IndiaStateCodeDelimiter.csv"
+  val InvalidHeaderFilePathState = "C:\\Users\\Admin\\IdeaProjects\\HelloScala\\src\\resources\\IndiaStateCodeInvalidHeader.csv"
   val CensusAnalyzerObj = new CensusAnalyzer()
 
   test("givenIndianCensusCSVFileShouldReturnCorrectRecords"){
-    assert(CensusAnalyzerObj.loadCSVInfo(IndiaCensusCSVFilePath) === 29)
+    assert(CensusAnalyzerObj.loadIndiaCensusData(IndiaCensusCSVFilePath) === 29)
   }
 
-  test("givenIndianCensusDataCSVFileWhenWithWrongFilePathShouldThrowException") {
+  test("givenIndiaStateCensusInputFilePathIsWrongShouldReturnIncorrectFilePathException") {
     val thrown = intercept[Exception] {
-      CensusAnalyzerObj.loadCSVInfo(WrongCSVFilePath)
+      CensusAnalyzerObj.loadIndiaCensusData(WrongCSVFilePath)
     }
     assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectPath.toString)
   }
 
-  test("givenIndianCensusDataCSVFileWhenWithWrongFileTypeShouldThrowException") {
+  test("givenIndiaStateCensusInputFileTypeWhenWrongShouldReturnIncorrectFileException") {
     val thrown = intercept[Exception] {
-      CensusAnalyzerObj.loadCSVInfo(WrongCSVFileTypePath)
+      CensusAnalyzerObj.loadIndiaCensusData(WrongCSVFileTypePath)
     }
     assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectFile.toString)
   }
 
-  test("IfFileDelimiterWrong_ReturnsIncorrectDelimiterException") {
+  test("givenIndiaStateCensusInputFileDelimiterWhenWrongShouldReturnIncorrectDelimiterException") {
     val thrown = intercept[Exception] {
-      CensusAnalyzerObj.loadCSVInfo(InvalidDelimiterFilePath)
+      CensusAnalyzerObj.loadIndiaCensusData(InvalidDelimiterFilePath)
     }
-    assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectDelimiter.toString)
+    assert(thrown.getMessage === CensusAnalyzerExceptionEnum.UnableToParse.toString)
   }
 
-  test("givenIndianCensusDataCSVFileWhenWithWrongDelimitersShouldThrowException") {
+  test("givenIndiaStateCensusInputFileFieldsWhenWrongShouldReturnIncorrectFieldsException") {
     val thrown = intercept[Exception] {
-      CensusAnalyzerObj.loadCSVInfo(InvalidHeaderFilePath)
+      CensusAnalyzerObj.loadIndiaCensusData(InvalidHeaderFilePath)
     }
-    assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectFields.toString)
+    assert(thrown.getMessage === CensusAnalyzerExceptionEnum.UnableToParse.toString)
   }
+
+  test("givenIndiaStateCodeMatchingNumberOfRowsInputCSVFileWithRightPathShouldReturnNumberOfRows"){
+    assert(CensusAnalyzerObj.loadIndiaStateCode(IndiaStateCodeCSVFilePath) === 37)
+  }
+
+  test("givenInputFilePathIsWhenWrongShouldReturnIncorrectFilePathException") {
+    val thrown = intercept[Exception] {
+      CensusAnalyzerObj.loadIndiaStateCode(WrongCSVFilePathStateCode)
+    }
+    assert(thrown.getMessage === CensusAnalyzerExceptionEnum.UnableToParse.toString)
+  }
+
+  test("givenInputFileTypeWhenWrongShouldReturnIncorrectFileException") {
+    val thrown = intercept[Exception] {
+      CensusAnalyzerObj.loadIndiaStateCode(WrongStateCSVFileType)
+    }
+    assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectFile.toString)
+  }
+
+  test("givenInputFileDelimiterWhenWrongShouldReturnIncorrectDelimiterException") {
+    val thrown = intercept[Exception] {
+      CensusAnalyzerObj.loadIndiaStateCode(InvalidStateDelimiter)
+    }
+    assert(thrown.getMessage === CensusAnalyzerExceptionEnum.UnableToParse.toString)
+  }
+
+  test("givenInputFileFieldsWhenWrongShouldReturnIncorrectFieldsException") {
+    val thrown = intercept[Exception] {
+      CensusAnalyzerObj.loadIndiaStateCode(InvalidHeaderFilePathState)
+    }
+    assert(thrown.getMessage === CensusAnalyzerExceptionEnum.UnableToParse.toString)
+  }
+
+
 
 }
