@@ -1,61 +1,48 @@
 package com.bridgelabz.censusanalyzer
-import java.io.FileNotFoundException
+import java.nio.file.{Files, Paths}
+import java.util
 
-import scala.io.Source
 class CensusAnalyzer {
-  def loadIndiaCensusData(filePath: String): Int = {
+
+  def loadCSVDataIndiaStateCensus(filePath:String): Int = {
     try {
-      if(!filePath.endsWith(".csv")){
+      if(!filePath.toLowerCase.endsWith(".csv")) {
         throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.InCorrectFile)
       }
-      val fileReader = Source.fromFile(filePath)
-      var countRow = 0
-      for (line <- fileReader.getLines()) {
-        val cols = line.split(",").map(_.trim)
-
-        if (cols.length != 4){
-          throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.UnableToParse)
-        }
-
-        if (countRow == 0){
-          if(cols(0) != "State" || cols(1) != "Population" || cols(2) != "AreaInSqKm" || cols(3) != "DensityPerSqKm"){
-            throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.UnableToParse)
-          }
-        }
-        countRow += 1
-      }
-      countRow - 1
+      listRowReturns(filePath,classOf[IndiaStateCensus])
     }
     catch {
-      case ex: FileNotFoundException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.InCorrectPath)
+      case _:java.nio.file.NoSuchFileException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.InCorrectPath)
+      case _:CSVBuilderException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.UnableToParse)
     }
   }
 
-  def loadIndiaStateCode(filePath:String):Int={
+  def loadCSVDataIndiaStateCode(filePath:String):Int = {
     try {
-      if(!filePath.endsWith(".csv")){
+      if (!filePath.toLowerCase.endsWith(".csv")) {
         throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.InCorrectFile)
       }
-      val fileReader = Source.fromFile(filePath)
-      var countRow = 0
-      for (line <- fileReader.getLines()) {
-        val cols = line.split(",").map(_.trim)
-
-        if (cols.length != 4){
-          throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.UnableToParse)
-        }
-
-        if (countRow == 0){
-          if(cols(1) != "State Name" || cols(2) != "TIN" || cols(3) != "StateCode"){
-            throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.UnableToParse)
-          }
-        }
-        countRow += 1
-      }
-      countRow - 1
+      listRowReturns(filePath,classOf[StateCode])
     }
     catch {
-      case ex: FileNotFoundException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.UnableToParse)
+      case _: java.nio.file.NoSuchFileException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.InCorrectPath)
+      case _:CSVBuilderException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.UnableToParse)
     }
+  }
+  def listRowReturns[T](filePath: String,c :Class[T]):Int = {
+    val reader = Files.newBufferedReader(Paths.get(filePath))
+    val csvBuilder = CSVBuilderFactory.createCSVBuilder()
+    val censusCSVList = csvBuilder.getList(reader,c)
+    censusCSVList.size()
+  }
+
+
+  def getCountRows[T](fileIterator: util.Iterator[T]):Int = {
+    var countRows = 0
+    while(fileIterator.hasNext) {
+      countRows += 1
+      fileIterator.next()
+    }
+    countRows
   }
 }
