@@ -1,48 +1,70 @@
 package com.bridgelabz.censusanalyzer
-import java.nio.file.{Files, Paths}
 import java.util
+import java.util.Comparator
+import com.google.gson.Gson
 
 class CensusAnalyzer {
+  var censusMap: Map[String, IndiaStateCensusDAO] = Map()
+  var censusStateMap: Map[String, IndiaStateCensusDAO] = Map()
 
-  def loadCSVDataIndiaStateCensus(filePath:String): Int = {
-    try {
-      if(!filePath.toLowerCase.endsWith(".csv")) {
-        throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.InCorrectFile)
+  def loadIndiaCensusData(filePath: String): Int = {
+    censusMap = new CensusLoader().loadData(classOf[IndiaStateCensus], filePath)
+    censusMap.size
+  }
+
+  def loadIndiaStateCode(filePath: String): Int = {
+    censusStateMap = new CensusLoader().loadData(classOf[StateCode], filePath)
+    censusStateMap.size
+  }
+
+  def sort(censusComparator: Comparator[IndiaStateCensusDAO]): String = {
+    if (censusMap == null || censusMap.isEmpty) {
+      throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.NoCensusData)
+    }
+    val size = censusMap.size
+    val censusCSVList = censusMap.values.toArray
+    for (count <- 0 until size - 1) {
+      for (secondCount <- 0 until size - count - 1) {
+        val census1 = censusCSVList(secondCount)
+        val census2 = censusCSVList(secondCount + 1)
+        if (censusComparator.compare(census1, census2) > 0) {
+          censusCSVList(secondCount) = census2
+          censusCSVList(secondCount + 1) = census1
+        }
       }
-      listRowReturns(filePath,classOf[IndiaStateCensus])
     }
-    catch {
-      case _:java.nio.file.NoSuchFileException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.InCorrectPath)
-      case _:CSVBuilderException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.UnableToParse)
-    }
+    val sortedStateCensusCensus = new Gson().toJson(censusCSVList)
+    sortedStateCensusCensus
   }
 
-  def loadCSVDataIndiaStateCode(filePath:String):Int = {
-    try {
-      if (!filePath.toLowerCase.endsWith(".csv")) {
-        throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.InCorrectFile)
+  def getStateCodeWiseSortedCensusData():String={
+    for (stateNameCensus <- censusMap.keys;stateName <- censusStateMap.keys;if (stateName.equals(stateNameCensus))){
+      val censusData = censusMap(stateNameCensus)
+      censusData.stateCode = censusStateMap(stateName).stateCode
+    }
+    val censusComparator = new Comparator[IndiaStateCensusDAO] {
+      override def compare(censusData1: IndiaStateCensusDAO, censusData2: IndiaStateCensusDAO): Int = {
+        censusData1.stateCode.compareTo(censusData2.stateCode)
       }
-      listRowReturns(filePath,classOf[StateCode])
     }
-    catch {
-      case _: java.nio.file.NoSuchFileException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.InCorrectPath)
-      case _:CSVBuilderException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnum.UnableToParse)
-    }
-  }
-  def listRowReturns[T](filePath: String,c :Class[T]):Int = {
-    val reader = Files.newBufferedReader(Paths.get(filePath))
-    val csvBuilder = CSVBuilderFactory.createCSVBuilder()
-    val censusCSVList = csvBuilder.getList(reader,c)
-    censusCSVList.size()
+    sort(censusComparator)
   }
 
+  def getStateWiseSortedCensusData(): String = {
+    val censusComparator = new Comparator[IndiaStateCensusDAO] {
+      override def compare(census1: IndiaStateCensusDAO, census2: IndiaStateCensusDAO): Int = {
+        census1.state.compareTo(census2.state)
+      }
+    }
+    sort(censusComparator)
+  }
 
   def getCountRows[T](fileIterator: util.Iterator[T]):Int = {
-    var countRows = 0
+    var rowsCounted = 0
     while(fileIterator.hasNext) {
-      countRows += 1
+      rowsCounted += 1
       fileIterator.next()
     }
-    countRows
+    rowsCounted
   }
 }

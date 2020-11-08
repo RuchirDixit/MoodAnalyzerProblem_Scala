@@ -4,6 +4,6 @@ import java.util
 
 @throws[CSVBuilderException]
 trait CSVBuilderTrait {
-  def getIterator[T] (reader: Reader, csvClass:Class[T]): util.Iterator[T]
-  def getList[T] (reader: Reader, csvClass:Class[T]): util.List[T]
+  def getCSVFileIterator[A] (reader:Reader,csvClass:Class[A]): util.Iterator[A]
+  def getCSVFileList[A] (reader:Reader,csvClass:Class[A]): util.List[A]
 }
