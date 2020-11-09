@@ -1,10 +1,11 @@
 package com.bridgelabz.censusanalyzer
-import java.util
-import java.util.Comparator
-
 import com.bridgelabz.censusanalyzer.Country.Country
 import com.google.gson.Gson
-
+/***
+ * Class performs sorting and imports Gson dependency in order to convert data into
+ * json and vice versa
+ * used gson dependency added to build.sbt
+ */
 class CensusAnalyzer {
   var censusMap: Map[String, CensusDAO] = Map()
 

@@ -1,4 +1,7 @@
 package com.bridgelabz.censusanalyzer
+/***
+ * Data Access Object class
+ */
 class CensusDAO {
   var state:String = _
   var population:Double = 0

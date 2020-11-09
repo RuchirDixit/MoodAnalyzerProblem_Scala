@@ -2,8 +2,17 @@ package com.bridgelabz.censusanalyzer
 import java.nio.file.{Files, NoSuchFileException, Paths}
 import java.util
 import com.bridgelabz.censusanalyzer.Country.Country
-
+/**
+ * Class Loads Data by calling DAO class
+ * Added CSV builder JAR in the project target
+ */
 class CensusLoader {
+  /**
+   * Loads Data for respective calls
+   * Stores Collection Map data structure
+   * Implements Iterator to Iterate the collection objects
+   * @return Map key value pair type value
+   */
   def loadData[A](country: Country, filePaths: Seq[String]): Map[String, CensusDAO] = {
     try {
       for (filePath <- filePaths) {
@@ -37,6 +46,12 @@ class CensusLoader {
     }
   }
 
+  /**
+   * Loads Data for StateCode
+   * Stores Collection Map data structure
+   * uses Iterator to Iterate the collection objects
+   * @return Map key value pair type value
+   */
   def loadStateCode(censusMap: Map[String, CensusDAO], filePath: String): Map[String, CensusDAO] = {
     try {
       val readerStateCode = Files.newBufferedReader(Paths.get(filePath))

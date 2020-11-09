@@ -1,4 +1,9 @@
 package com.bridgelabz.censusanalyzer
+/***
+ * Custom Exception class which uses Enum types
+ * @param message
+ */
+
 class CensusAnalyserException(message: CensusAnalyzerExceptionEnums.Value) extends Exception(message.toString) {}
 
 object CensusAnalyzerExceptionEnums extends Enumeration {

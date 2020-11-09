@@ -1,7 +1,11 @@
 import com.bridgelabz.censusanalyzer.{CensusAnalyzer, CensusAnalyzerExceptionEnums, Country, IndiaCensusDTO}
 import com.google.gson.Gson
 import org.scalatest.FunSuite
-
+/***
+ * Test Use case Class which extends FunSuite scala test class
+ * Added ScalaTest dependency in Build.sbt
+ * Uses Gson and CSV dependencies
+ */
 class CensusAnalyzerTest extends FunSuite {
 
   val IndiaCensusCSVFilePath = "C:\\Users\\Admin\\IdeaProjects\\HelloScala\\src\\resources\\IndiaStateCensusData.csv"
@@ -163,5 +167,16 @@ class CensusAnalyzerTest extends FunSuite {
     val censusCSV = new Gson().fromJson(sortedCensusData,classOf[Array[IndiaCensusDTO]])
     assert(censusCSV(0).state === "Alaska")
     assert(censusCSV.last.state === "Wyoming")
+  }
+  test("givenIndiaCensus&USCensusDataWhenSortedByPopulationDensityShouldReturnSortedResult") {
+    CensusObj.loadCensusData(Country.USA, USCensusCSVFilePath)
+    val sortedCensusData = CensusObj.getPopulationDensityWiseSortedCensusData
+    val censusCSV = new Gson().fromJson(sortedCensusData, classOf[Array[IndiaCensusDTO]])
+    assert(censusCSV(0).state === "District of Columbia")
+
+    CensusObj.loadCensusData(Country.India, IndiaCensusCSVFilePath, IndiaStateCodeCSVFilePath)
+    val sortedCensusDataIndia = CensusObj.getPopulationDensityWiseSortedCensusData
+    val censusCSVIndia = new Gson().fromJson(sortedCensusDataIndia, classOf[Array[IndiaCensusDTO]])
+    assert(censusCSVIndia(0).state === "Bihar")
   }
 }
