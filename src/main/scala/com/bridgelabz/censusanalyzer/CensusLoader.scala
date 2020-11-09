@@ -10,9 +10,9 @@ class CensusLoader {
    * @tparam A : Generic
    * @return : Map with census data
    */
-  def loadData[A](csvClass: Class[A], filePaths: String*): Map[String, IndiaStateCensusDAO] = {
+  def loadData[A](csvClass: Class[A], filePaths: String*): Map[String, CensusDAO] = {
     try {
-      var censusMap: Map[String, IndiaStateCensusDAO] = Map()
+      var censusMap: Map[String, CensusDAO] = Map()
       for (filePath <- filePaths) {
         if (!filePath.endsWith(".csv")) {
           throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.InCorrectFileType)
@@ -23,15 +23,19 @@ class CensusLoader {
           val censusCSVIterator: util.Iterator[IndiaStateCensus] = csvBuilder.getCSVFileIterator(reader, classOf[IndiaStateCensus])
           while (censusCSVIterator.hasNext){
             val objDAO = censusCSVIterator.next()
-            censusMap += (objDAO.state -> new IndiaStateCensusDAO(objDAO))
+            censusMap += (objDAO.state -> new CensusDAO(objDAO))
           }
         }
         else if(csvClass.getName == "com.bridgelabz.censusanalyzer.StateCode"){
           val censusCSVIterator: util.Iterator[StateCode] = csvBuilder.getCSVFileIterator(reader, classOf[StateCode])
           while (censusCSVIterator.hasNext){
             val objDAO = censusCSVIterator.next()
-            censusMap += (objDAO.stateName -> new IndiaStateCensusDAO(objDAO))
+            censusMap += (objDAO.stateName -> new CensusDAO(objDAO))
           }
+        }
+        else if (csvClass.getName == "com.bridgelabz.censusanalyzer.USCensusDTO"){
+          val censusCSVIterator: util.Iterator[USCensusDTO] = csvBuilder.getCSVFileIterator(reader,classOf[USCensusDTO])
+          censusCSVIterator.forEachRemaining { objDAO => censusMap += (objDAO.state -> new CensusDAO(objDAO))}
         }
       }
       censusMap
