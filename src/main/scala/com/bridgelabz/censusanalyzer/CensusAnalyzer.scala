@@ -86,6 +86,16 @@ class CensusAnalyzer {
     sort(censusComparator.reversed())
   }
 
+  // method to return state population wise sorted data
+  def getPopulationWiseSortedCensusData(): String = {
+    val censusComparator = new Comparator[IndiaStateCensusDAO] {
+      override def compare(obj1: IndiaStateCensusDAO, obj2: IndiaStateCensusDAO): Int = {
+        obj1.population.compareTo(obj2.population)
+      }
+    }
+    sort(censusComparator.reversed())
+  }
+
   /**
    *
    * @param fileIterator : to iterate over file to find count
