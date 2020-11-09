@@ -1,45 +1,27 @@
 package com.bridgelabz.censusanalyzer
 import java.util
 import java.util.Comparator
+
+import com.bridgelabz.censusanalyzer.Country.Country
 import com.google.gson.Gson
 
 class CensusAnalyzer {
   var censusMap: Map[String, CensusDAO] = Map()
-  var censusStateMap: Map[String, CensusDAO] = Map()
 
   /**
    *
-   * @param filePath : path of csv file
-   * @return : get India State census file and load it from Census loader class
+   * @param country : India or US
+   * @param filepath : path of file passes as paramter
+   * @return : size of census map
    */
-  def loadIndiaCensusData(filePath: String): Int = {
-    censusMap = new CensusLoader().loadData(classOf[IndiaStateCensus], filePath)
-    censusMap.size
-  }
-
-  /**
-   *
-   * @param filePath : path of csv file
-   * @return : get India State code file and load it from Census loader class
-   */
-  def loadIndiaStateCode(filePath: String): Int = {
-    censusStateMap = new CensusLoader().loadData(classOf[StateCode], filePath)
-    censusStateMap.size
-  }
-
-  /**
-   *
-   * @param filePath : path of csv file
-   * @return : get US census file and load it from Census loader class
-   */
-  def loadCensusUSData(filePath: String):Int={
-    censusMap = new CensusLoader().loadData(classOf[USCensusDTO],filePath)
+  def loadCensusData(country: Country,filepath:String*): Int = {
+    censusMap = new CensusLoader().loadData(country,filepath)
     censusMap.size
   }
 
   def sort(choice: Int): String = {
     if (censusMap == null || censusMap.isEmpty) {
-      throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.NoCensusData)
+      throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.NoCensusData)
     }
     var censusCSVList = censusMap.values.toArray
     censusCSVList = choice match {
@@ -58,10 +40,6 @@ class CensusAnalyzer {
   }
 
   def getStateCodeWiseSortedCensusData: String = {
-    for (stateNameCensus <- censusMap.keys; stateName <- censusStateMap.keys; if (stateName.equals(stateNameCensus))) {
-      val censusData = censusMap(stateNameCensus)
-      censusData.stateCode = censusStateMap(stateName).stateCode
-    }
     sort(2)
   }
 

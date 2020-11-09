@@ -1,7 +1,7 @@
 package com.bridgelabz.censusanalyzer
 import com.opencsv.bean.CsvBindByName
 
-case class IndiaStateCensus() {
+class IndiaCensusDTO() {
 
   @CsvBindByName(column = "State", required = true)
   var state: String = _
@@ -17,5 +17,4 @@ case class IndiaStateCensus() {
     ", Population='" + population + '\'' +
     ", AreaInSqKm='" + areaInSqKm + '\'' +
     ", DensityPerSqKm='" + densityPerSqKm + '\'' + '}'
-
 }

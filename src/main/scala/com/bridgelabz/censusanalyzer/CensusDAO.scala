@@ -12,24 +12,24 @@ class CensusDAO {
 
   /**
    *
-   * @param indiaCensus : Constructor for India State Census
+   * @param indiaCensusCSV : Constructor for India State Census
    */
-  def this(indiaCensus: IndiaStateCensus){
+  def this(indiaCensusCSV: IndiaCensusDTO){
     this()
-    state = indiaCensus.state
-    totalArea = indiaCensus.areaInSqKm
-    populationDensity = indiaCensus.densityPerSqKm
-    population = indiaCensus.population
+    state=indiaCensusCSV.state
+    totalArea=indiaCensusCSV.areaInSqKm
+    populationDensity=indiaCensusCSV.densityPerSqKm
+    population=indiaCensusCSV.population
   }
 
   /**
    *
-   * @param stateCensusCode : Constructor for India State Census
+   * @param indiaStateCodeCSV : Constructor for India State Code
    */
-  def this(stateCensusCode: StateCode){
+  def this(indiaStateCodeCSV: IndiaStateCodeDTO){
     this()
-    state = stateCensusCode.stateName
-    stateCode = stateCensusCode.stateCode
+    state=indiaStateCodeCSV.stateName
+    stateCode= indiaStateCodeCSV.stateCode
   }
 
   /**

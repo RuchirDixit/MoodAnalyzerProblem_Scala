@@ -22,7 +22,7 @@ class OpenCSVBuilder[A] extends CSVBuilderTrait {
       csvToBean.iterator()
     }
     catch {
-      case _: RuntimeException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.UnableToParse)
+      case _: RuntimeException => throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.UnableToParse)
     }
   }
 
@@ -39,7 +39,7 @@ class OpenCSVBuilder[A] extends CSVBuilderTrait {
       csvToBean.parse()
     }
     catch {
-      case _: RuntimeException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.UnableToParse)
+      case _: RuntimeException => throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.UnableToParse)
     }
   }
 
@@ -58,7 +58,7 @@ class OpenCSVBuilder[A] extends CSVBuilderTrait {
       csvToBean
     }
     catch {
-      case _: RuntimeException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.UnableToParse)
+      case _: RuntimeException => throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.UnableToParse)
     }
   }
 }
