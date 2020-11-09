@@ -96,6 +96,16 @@ class CensusAnalyzer {
     sort(censusComparator.reversed())
   }
 
+  // method to return state area wise sorted data
+  def getAreaWiseSortedCensusData(): String = {
+    val censusComparator = new Comparator[IndiaStateCensusDAO] {
+      override def compare(obj1: IndiaStateCensusDAO, obj2: IndiaStateCensusDAO): Int = {
+        obj1.areaInSqKm.compareTo(obj2.areaInSqKm)
+      }
+    }
+    sort(censusComparator.reversed())
+  }
+
   /**
    *
    * @param fileIterator : to iterate over file to find count
