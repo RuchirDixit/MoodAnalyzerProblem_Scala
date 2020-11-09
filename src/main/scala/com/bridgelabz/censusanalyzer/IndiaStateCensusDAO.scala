@@ -6,6 +6,10 @@ class IndiaStateCensusDAO {
   var densityPerSqKm = 0
   var stateCode:String = _
 
+  /**
+   *
+   * @param indiaCensusCSV : Constructor for India State Census
+   */
   def this(indiaCensusCSV: IndiaStateCensus){
     this()
     state=indiaCensusCSV.state
@@ -14,9 +18,13 @@ class IndiaStateCensusDAO {
     population=indiaCensusCSV.population
   }
 
+  /**
+   *
+   * @param indiaStateCodeCSV : Constructor for India State Code
+   */
   def this(indiaStateCodeCSV: StateCode){
     this()
-    state=indiaStateCodeCSV.state
+    state=indiaStateCodeCSV.stateName
     stateCode= indiaStateCodeCSV.stateCode
   }
 }

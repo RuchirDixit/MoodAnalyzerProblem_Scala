@@ -7,16 +7,31 @@ class CensusAnalyzer {
   var censusMap: Map[String, IndiaStateCensusDAO] = Map()
   var censusStateMap: Map[String, IndiaStateCensusDAO] = Map()
 
+  /**
+   *
+   * @param filePath : path of csv file
+   * @return : get India State census file and load it from Census loader class
+   */
   def loadIndiaCensusData(filePath: String): Int = {
     censusMap = new CensusLoader().loadData(classOf[IndiaStateCensus], filePath)
     censusMap.size
   }
 
+  /**
+   *
+   * @param filePath : path of csv file
+   * @return : get India State code file and load it from Census loader class
+   */
   def loadIndiaStateCode(filePath: String): Int = {
     censusStateMap = new CensusLoader().loadData(classOf[StateCode], filePath)
     censusStateMap.size
   }
 
+  /**
+   *
+   * @param censusComparator : To compare Map
+   * @return : sorted values based on attribute passed
+   */
   def sort(censusComparator: Comparator[IndiaStateCensusDAO]): String = {
     if (censusMap == null || censusMap.isEmpty) {
       throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.NoCensusData)
@@ -37,6 +52,7 @@ class CensusAnalyzer {
     sortedStateCensusCensus
   }
 
+  // method to return state code wise sorted data
   def getStateCodeWiseSortedCensusData():String={
     for (stateNameCensus <- censusMap.keys;stateName <- censusStateMap.keys;if (stateName.equals(stateNameCensus))){
       val censusData = censusMap(stateNameCensus)
@@ -50,6 +66,7 @@ class CensusAnalyzer {
     sort(censusComparator)
   }
 
+  // method to return state name wise sorted data
   def getStateWiseSortedCensusData(): String = {
     val censusComparator = new Comparator[IndiaStateCensusDAO] {
       override def compare(census1: IndiaStateCensusDAO, census2: IndiaStateCensusDAO): Int = {
@@ -59,6 +76,22 @@ class CensusAnalyzer {
     sort(censusComparator)
   }
 
+  // method to return state population density wise sorted data
+  def getPopulationDensityWiseSortedCensusData():String = {
+    val censusComparator = new Comparator[IndiaStateCensusDAO] {
+      override def compare(obj1: IndiaStateCensusDAO, obj2: IndiaStateCensusDAO): Int = {
+        obj1.densityPerSqKm.compareTo(obj2.densityPerSqKm)
+      }
+    }
+    sort(censusComparator.reversed())
+  }
+
+  /**
+   *
+   * @param fileIterator : to iterate over file to find count
+   * @tparam T : Generics
+   * @return : count of rows
+   */
   def getCountRows[T](fileIterator: util.Iterator[T]):Int = {
     var rowsCounted = 0
     while(fileIterator.hasNext) {
